@@ -269,6 +269,9 @@ class OraclePlatform extends AbstractPlatform
      */
     public function getIntegerTypeDeclarationSQL(array $field)
     {
+        if ( ! empty($field['autoincrement'])) {
+            return 'NUMBER(10) GENERATED AS IDENTITY';
+        }
         return 'NUMBER(10)';
     }
 
@@ -277,6 +280,9 @@ class OraclePlatform extends AbstractPlatform
      */
     public function getBigIntTypeDeclarationSQL(array $field)
     {
+        if ( ! empty($field['autoincrement'])) {
+            return 'NUMBER(20) GENERATED AS IDENTITY';
+        }
         return 'NUMBER(20)';
     }
 
@@ -285,6 +291,9 @@ class OraclePlatform extends AbstractPlatform
      */
     public function getSmallIntTypeDeclarationSQL(array $field)
     {
+        if ( ! empty($field['autoincrement'])) {
+            return 'NUMBER(5) GENERATED AS IDENTITY';
+        }
         return 'NUMBER(5)';
     }
 
@@ -395,8 +404,9 @@ class OraclePlatform extends AbstractPlatform
                 $sql[] = $this->getCreateSequenceSQL($column['sequence'], 1);
             }
 
-            if (isset($column['autoincrement']) && $column['autoincrement'] ||
-               (isset($column['autoinc']) && $column['autoinc'])) {
+            if ( (isset($column['autoincrement']) && $column['autoincrement'] ||
+               (isset($column['autoinc']) && $column['autoinc'])) &&
+               $this->usesSequenceEmulatedIdentityColumns()) {
                 $sql = array_merge($sql, $this->getCreateAutoincrementSql($name, $table));
             }
         }
