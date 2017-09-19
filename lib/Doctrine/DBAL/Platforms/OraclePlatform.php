@@ -936,7 +936,7 @@ END;';
      */
     public function prefersSequences()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -944,7 +944,7 @@ END;';
      */
     public function usesSequenceEmulatedIdentityColumns()
     {
-        return true;
+        return false;
     }
 
     /**
